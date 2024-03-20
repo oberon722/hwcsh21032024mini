@@ -1,0 +1,73 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Введите длину массива:");
+
+        int arrayLength;
+        while (!int.TryParse(Console.ReadLine(), out arrayLength) || arrayLength <= 0)
+        {
+            Console.WriteLine("Некорректный ввод. Пожалуйста, введите положительное целое число:");
+        }
+
+        string[] inputArray = new string[arrayLength];
+
+        // Заполнение массива элементами, введенными пользователем
+        for (int i = 0; i < arrayLength; i++)
+        {
+            Console.WriteLine($"Введите элемент массива #{i + 1}:");
+            inputArray[i] = Console.ReadLine();
+        }
+
+        // Формирование нового массива из строк, длина которых <= 3 символов
+        string[] resultArray = FilterArray(inputArray);
+
+        // Вывод результатов
+        Console.Write("Результирующий массив: [");
+        for (int i = 0; i < resultArray.Length; i++)
+        {
+            Console.Write($"\"{resultArray[i]}\"");
+            if (i < resultArray.Length - 1)
+            {
+                Console.Write(", ");
+            }
+        }
+        Console.WriteLine("]");
+
+        Console.ReadLine(); // Чтобы консольное окно не закрывалось сразу
+    }
+
+    static string[] FilterArray(string[] inputArray)
+    {
+        if (inputArray == null)
+        {
+            throw new ArgumentNullException(nameof(inputArray));
+        }
+
+        // Фильтрация массива
+        int count = 0; // Количество подходящих строк
+        foreach (var item in inputArray)
+        {
+            if (item != null && item.Length <= 3)
+            {
+                count++;
+            }
+        }
+
+        // Создание нового массива и копирование подходящих строк
+        string?[] resultArray = new string?[count]; // Обратите внимание на использование string? для разрешения присваивания null
+        int currentIndex = 0;
+        foreach (var item in inputArray)
+        {
+            if (item != null && item.Length <= 3)
+            {
+                resultArray[currentIndex] = item;
+                currentIndex++;
+            }
+        }
+
+        return resultArray.Select(x => x ?? "").ToArray(); // Возвращаемый массив не должен содержать null, поэтому преобразуем его в массив строк и заменяем null на пустую строку
+    }
+}
